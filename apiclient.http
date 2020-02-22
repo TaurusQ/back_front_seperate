@@ -1,12 +1,12 @@
-@host = http://seperate.test
+@host = http://seperate.test/api
 
 
 ### test
-GET {{host}}/api/test HTTP/1.1
+GET {{host}}/admin/test HTTP/1.1
 content-type: application/json
 
 ### get captcha
-GET {{host}}/api/captcha HTTP/1.1
+GET {{host}}/admin/captcha HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 
@@ -14,7 +14,7 @@ X-Requested-With: XMLHttpRequest
 
 ### admin login
 # @name login
-POST {{host}}/api/login HTTP/1.1
+POST {{host}}/admin/login HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 
@@ -28,7 +28,7 @@ X-Requested-With: XMLHttpRequest
 
 
 ### admin info
-POST {{host}}/api/me HTTP/1.1
+POST {{host}}/admin/me HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
@@ -36,13 +36,13 @@ Authorization: Bearer {{adminToken}}
 
 
 ### admin logout
-POST {{host}}/api/logout HTTP/1.1
+POST {{host}}/admin/logout HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
 
 ### refresh
-POST {{host}}/api/refresh HTTP/1.1
+POST {{host}}/admin/refresh HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 
@@ -79,4 +79,180 @@ Cache-Control: no-cache
   "client_secret":"En2SBHawG9VrWrUkJqY0FOZHVklvOsazK4DzCSfG",   
   "provider":"admins",
   "refresh_token": "{{refreshToken}}"
+}
+
+### permissions list
+GET {{host}}/admin/permissions HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### permission
+GET {{host}}/admin/permissions/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### update permission
+PATCH {{host}}/admin/permissions/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "remark": "test"
+}
+
+### create permission
+POST {{host}}/admin/permissions HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "name":"test permission3",
+  "guard_name":"admin",
+  "description":"test",
+  "remark":"test",
+  "pid":0,
+  "type":1
+}
+
+### delete permission
+DELETE {{host}}/admin/permissions/5 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete permissions
+DELETE {{host}}/admin/permissions/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[8,9]
+}
+
+### roles list
+GET {{host}}/admin/roles HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### role
+GET {{host}}/admin/roles/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### create role
+POST {{host}}/admin/roles HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "name":"test Role2",
+  "guard_name":"admin",
+  "description":"test",
+  "remark":"test",
+  "pid":0,
+  "type":1
+}
+
+### update role
+PATCH {{host}}/admin/roles/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "remark": "test02"
+}
+
+### delete role
+DELETE {{host}}/admin/roles/5 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete roles
+DELETE {{host}}/admin/roles/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[6,7]
+}
+
+### assign permissions to role
+POST {{host}}/admin/roles/assign/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[1,2,3]
+}
+
+### admins list
+GET {{host}}/admin/admins HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### admin
+GET {{host}}/admin/admins/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### create admin
+POST {{host}}/admin/admins HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "username":"test admin32",
+  "password":"123456"
+}
+
+
+### update admin
+PATCH {{host}}/admin/admins/4 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "username": "admin"
+}
+
+### delete admin
+DELETE {{host}}/admin/admins/4 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete admins
+DELETE {{host}}/admin/admins/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[5,6]
+}
+
+### assign roles to permission
+POST {{host}}/admin/roles/assign/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[1,2,3]
 }

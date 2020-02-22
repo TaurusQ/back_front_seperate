@@ -10,13 +10,12 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use Notifiable,HasMultiAuthApiTokens,HasRoles;
+    use Notifiable, HasMultiAuthApiTokens, HasRoles;
 
-    protected $fillable = [
-        'username', 'password',
-    ];
+    protected $guarded = [];
 
-    public function findForPassport($login) {
+    public function findForPassport($login)
+    {
         //return User::orWhere('email', $login)->orWhere('username', $login)->first();
         return $this->where('username', $login)->first();
     }

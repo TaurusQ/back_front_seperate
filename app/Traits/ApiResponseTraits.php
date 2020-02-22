@@ -22,14 +22,20 @@ trait ApiResponseTraits
 
 	public function respond($data, $header = [])
 	{
-		return response()->json($data, $this->getStatusCode(), $header);
+		return response()->json($data, $this->getStatusCode(), $header)
+		->setEncodingOptions(JSON_UNESCAPED_UNICODE);
 	}
 
 	public function message($message, $status = "success")
 	{
-		return $this->status($status, [
-			'message' => $message
-		]);
+		return $this->status($status, [], null, $message);
+		// return $this->status($status, [
+		// 	'message' => $message
+		// ]);
+	}
+
+	public function messageWithCode($message, $code ,$status = "success"){
+		return $this->status($status, [], $code, $message);
 	}
 
 	public function internalError($message = "Internal Error!")
@@ -47,6 +53,20 @@ trait ApiResponseTraits
 		return $this->status($status, compact('data'), $code, $message);
 	}
 
+	/**
+	 * 返回格式化的响应信息
+	 *
+	 * @param string $status
+	 * @param array $data
+	 * @param integer $code
+	 * @param string $message
+	 * @return void
+	 * @Description
+	 * @example
+	 * @author TaurusQ
+	 * @since
+	 * @date 2020-02-22
+	 */
 	public function status($status, array $data, $code = null, $message = '')
 	{
 		if ($code) {

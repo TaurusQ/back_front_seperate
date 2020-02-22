@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use SMartins\PassportMultiauth\HasMultiAuthApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use Notifiable,HasMultiAuthApiTokens;
+    use Notifiable,HasMultiAuthApiTokens,HasRoles;
 
     protected $fillable = [
         'username', 'password',

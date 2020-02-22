@@ -14,6 +14,14 @@ class Admin extends Authenticatable
 
     protected $guarded = [];
 
+    const STATUS_NORMAL = 1;
+    const STATUS_FORBIDEN = -1;
+
+    public static $statusMap = [
+        self::STATUS_NORMAL => '正常',
+        self::STATUS_FORBIDEN => '禁止'
+    ];
+
     public function findForPassport($login)
     {
         //return User::orWhere('email', $login)->orWhere('username', $login)->first();

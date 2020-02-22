@@ -23,9 +23,9 @@ class DatabaseSeeder extends Seeder
          * 会需要重新设置 passport 相关信息
          */
         $this->call(ResetDataSeeder::class);
-
+        $this->call(RolesAndPermissionsTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(AdminsTableSeeder::class);
-        $this->call(RolesAndPermissionsTableSeeder::class);
+        
     }
 }

@@ -19,7 +19,11 @@ class RolesAndPermissionsTableSeeder extends Seeder
 
         // 创建权限和角色时，需要带上 guard_name 参数，否则默认是 web
 
-        // 先创建权限，
+        // 先创建权限 name,guard_name,pid,type,route_name,description
+        
+
+
+         
         Permission::create(['name' => 'manage_contents', 'description' => '管理内容', 'guard_name' => 'admin']);
         Permission::create(['name' => 'manage_users', 'description' => '管理用户', 'guard_name' => 'admin']);
         Permission::create(['name' => 'edit_settings', 'description' => '数据添加修改', 'guard_name' => 'admin']);
@@ -39,5 +43,6 @@ class RolesAndPermissionsTableSeeder extends Seeder
         $maintainer->givePermissionTo('manage_contents');
 
         $maintainer = Role::create(['name' => 'Developer', 'description' => '开发人员', 'guard_name' => 'admin']);
+        
     }
 }

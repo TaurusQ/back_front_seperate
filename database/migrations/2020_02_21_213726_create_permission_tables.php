@@ -23,6 +23,9 @@ class CreatePermissionTables extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('guard_name');
+            $table->unsignedSmallInteger('pid')->nullable()->comment('权限的从属关系(0->顶级节点)');
+            $table->unsignedTinyInteger('type')->nullable()->comment('权限类型（1->组 2->功能节点）');
+            $table->string('route_name')->nullable()->comment('路由名称');
             $table->string('description')->default('')->comment('说明');
             $table->string('remark')->default('');
             $table->timestamps();

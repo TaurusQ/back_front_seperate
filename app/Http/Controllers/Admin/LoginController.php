@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Traits\ProxyTrait;
 use GuzzleHttp\Client;
@@ -12,7 +10,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class LoginController extends ApiController
+class LoginController extends AdminBaseController
 {
     use AuthenticatesUsers, ProxyTrait;
 

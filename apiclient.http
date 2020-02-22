@@ -1,0 +1,82 @@
+@host = http://seperate.test
+
+
+### test
+GET {{host}}/api/test HTTP/1.1
+content-type: application/json
+
+### get captcha
+GET {{host}}/api/captcha HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+
+
+
+### admin login
+# @name login
+POST {{host}}/api/login HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+  "username":"admin",
+  "password":"admin"
+}
+
+@adminToken = {{login.response.body.$.token.access_token}}
+@refreshToken = {{login.response.body.$.token.refresh_token}}
+
+
+### admin info
+POST {{host}}/api/me HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+
+
+### admin logout
+POST {{host}}/api/logout HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### refresh
+POST {{host}}/api/refresh HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+  "refresh_token": "{{refreshToken}}"
+}
+
+
+### oauth token
+POST {{host}}/oauth/token HTTP/1.1
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-cache
+
+{
+  "grant_type":"password",
+  "client_id":"2",
+  "client_secret":"Ba2swh9tdizTmw4zetCNUi5d734YtNUk9AqGMRJs",
+  "scope":"*",    
+  "username":"admin",
+  "password":"admin",
+  "provider":"admins"
+}
+
+### token refresh
+POST {{host}}/oauth/token HTTP/1.1
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-cache
+
+{
+  "grant_type":"refresh_token",
+  "client_id":"2",
+  "client_secret":"En2SBHawG9VrWrUkJqY0FOZHVklvOsazK4DzCSfG",   
+  "provider":"admins",
+  "refresh_token": "{{refreshToken}}"
+}

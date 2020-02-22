@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\InvalidRequestException;
 use App\Models\Admin;
+use App\Services\AdminLogsService;
 use App\Traits\ProxyTrait;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -19,33 +22,46 @@ class LoginController extends AdminBaseController
 
     public function test()
     {
-
+        //echo '123';
+        //throw new InvalidRequestException("test error");
     }
 
     public function login(Request $request)
     {
         $this->validateLogin($request);
 
-        // 验证账号密码是否正确
-        $user = Admin::query()->where($this->username(), $request->get($this->username()))->first();
+        try {
+            // 验证账号密码是否正确
+            $user = Admin::query()->where($this->username(), $request->get($this->username()))->first();
 
-        if (!$user) {
-            $this->response()->json("用户不存在", 401);
+            if (!$user) {
+                //$this->response()->json("用户不存在", 401);
+                return $this->failed("用户不存在", 401);
+            }
+
+            if (!Hash::check($request->get("password"), $user->password)) {
+                //$this->response()->json("密码不正确", 401);
+                app(AdminLogsService::class)->loginLogCreate($request, '密码不正确');
+                return $this->failed("密码不正确", 401);
+            }
+
+            if ($user->status == Admin::STATUS_FORBIDEN) {
+                app(AdminLogsService::class)->loginLogCreate($request, '该用户被禁用');
+                return $this->failed("该用户被禁用", 401);
+            }
+           
+            app(AdminLogsService::class)->loginLogCreate($request,'',$user);
+            //$token = $user->createToken($this->token_name);
+            //$token = $this->authenticate('admins');
+            $token = $this->authenticate($this->provider_name);
+
+            return response()->json([
+                'token' => $token,
+                'user' => $user
+            ]);
+        } catch (Exception $e) {
+            return $this->failed($e->getMessage());
         }
-
-        if (!Hash::check($request->get("password"), $user->password)) {
-            $this->response()->json("密码不正确", 401);
-        }
-
-        //$token = $user->createToken($this->token_name);
-
-        //$token = $this->authenticate('admins');
-        $token = $this->authenticate($this->provider_name);
-
-        return response()->json([
-            'token' => $token,
-            'user' => $user
-        ]);
     }
 
     public function me(Request $request)
@@ -59,6 +75,7 @@ class LoginController extends AdminBaseController
     public function logout(Request $request)
     {
         if ($this->guard()->check()) {
+            app(AdminLogsService::class)->logoutLogCreate($request);
             $this->guard()->user()->token()->delete();
             // print_r($this->guard()->user()->token());
         }

@@ -96,5 +96,12 @@ class LoginController extends AdminBaseController
         ]);
     }
 
-    
+    /**
+     * 自定义登录参数
+     * @return string
+     */
+    public function username()
+    {
+        return 'username';
+    }
 }

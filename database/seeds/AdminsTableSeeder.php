@@ -19,7 +19,7 @@ class AdminsTableSeeder extends Seeder
         $admin = factory(Admin::class)->times(3)->make();
 
         // 让隐藏字段可见，并将数据集合转换为数组
-        Admin::insert($admin->makeVisible(['password'])->toArray());
+        Admin::insert($admin->makeVisible(['password'])->makeHidden(['status_text'])->toArray());
 
         // 处理第一个用户，密码默认都是 admin
         $admin = Admin::find(1);

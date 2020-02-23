@@ -55,6 +55,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if(env("APP_DEBUG")){
+            return parent::render($request, $exception);
+        }
+
         if($request->ajax()){
             if(!$exception instanceof ValidationException &&
                 !$exception instanceof AuthenticationException 

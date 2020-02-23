@@ -7,6 +7,7 @@ use App\Traits\CurdTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ApiController extends Controller
 {
@@ -14,6 +15,11 @@ class ApiController extends Controller
 
     protected $model;
     protected $resourceCollection = "App\Http\Resources\CommonCollection";
+
+    protected function list(Request $request){
+        $per_page = $request->get('per_page', 10);
+        return $this->getListData($per_page);
+    }
 
     protected function getListData($pageSize)
     {
@@ -23,7 +29,8 @@ class ApiController extends Controller
 
     protected function show($id)
     {
-        $data = $this->model::findOrFail($id);
+        //$data = $this->model::findOrFail($id);
+        $data = $this->find($id);
         return $this->success($data);
     }
 
@@ -181,5 +188,14 @@ class ApiController extends Controller
     protected function  ruleMessage()
     {
         return [];
+    }
+
+    /**
+     * 自定义登录看守器
+     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard($this->guard_name ?? '');
     }
 }

@@ -19,22 +19,4 @@ class AdminBaseController extends ApiController
 {
     public $guard_name = "admin";
     public $provider_name = "admins";
-
-    /**
-     * 自定义登录参数
-     * @return string
-     */
-    public function username()
-    {
-        return 'username';
-    }
-
-    /**
-     * 自定义登录看守器
-     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
-     */
-    protected function guard()
-    {
-        return Auth::guard($this->guard_name);
-    }
 }

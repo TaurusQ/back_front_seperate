@@ -16,8 +16,14 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'username', 'email', 'password',
+    protected $guarded = [];
+
+    const STATUS_NORMAL = 1;
+    const STATUS_FORBIDEN = -1;
+
+    public static $statusMap = [
+        self::STATUS_NORMAL => '正常',
+        self::STATUS_FORBIDEN => '禁止'
     ];
 
     /**
@@ -28,6 +34,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $appends = ['status_text'];
 
     /**
      * The attributes that should be cast to native types.
@@ -41,5 +49,9 @@ class User extends Authenticatable
     public function findForPassport($login) {
         //return User::orWhere('email', $login)->orWhere('username', $login)->first();
         return $this->where('username', $login)->first();
+    }
+
+    public function getStatusTextAttribute(){
+        return isset_and_not_empty(self::$statusMap,$this->attributes['status'],'');
     }
 }

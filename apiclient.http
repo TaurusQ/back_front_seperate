@@ -256,3 +256,16 @@ Authorization: Bearer {{adminToken}}
 {
   "ids":[1,2,3]
 }
+
+
+### adminlogs list
+GET {{host}}/admin/adminlogs HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### adminlog
+GET {{host}}/admin/adminlogs/11 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}

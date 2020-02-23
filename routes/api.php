@@ -56,5 +56,9 @@ Route::namespace("Admin")->name("api.")->prefix("admin")->group(function () {
         Route::delete('/roles/batch', 'RolesController@deleteAll')->name('roles.batch_delete');
         Route::delete('/roles/{role}', 'RolesController@destroy')->name('roles.destroy');
         Route::post('roles/assign/{role}', 'RolesController@assign')->name('roles.assign');
+    
+        // admin log
+        Route::get('/adminlogs', 'AdminLogsController@list')->name('adminlogs.list');
+        Route::get('/adminlogs/{adminlog}', 'AdminLogsController@show')->name('adminlogs.show');
     });
 });

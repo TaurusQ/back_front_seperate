@@ -33,6 +33,22 @@ function get_client_ip()
     return $realip;
 }
 
+/**
+ * 判断数组的键是否存在，并且佱不为空,如果为空，取给定的值作为默认值
+ * @param $arr
+ * @param $column
+ * @return null
+ */
+function isset_and_not_empty($arr, $column, $defaultValue = '')
+{
+    if ((isset($arr[$column]) && $arr[$column])) {
+        return $arr[$column];
+    } else {
+        return $defaultValue;
+    }
+}
+
+/*
 function admin_log_record($user_id, $type, $table_name, $description, $content_data = '', $content_message = '')
 {
     if (!$content_message) $content_message = $description;
@@ -49,6 +65,7 @@ function admin_log_record($user_id, $type, $table_name, $description, $content_d
         ],
     ]);
 }
+*/
 
 function pr($str)
 {

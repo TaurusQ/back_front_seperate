@@ -22,9 +22,15 @@ class Admin extends Authenticatable
         self::STATUS_FORBIDEN => '禁止'
     ];
 
+    protected $appends = ['status_text'];
+
     public function findForPassport($login)
     {
         //return User::orWhere('email', $login)->orWhere('username', $login)->first();
         return $this->where('username', $login)->first();
+    }
+
+    public function getStatusTextAttribute(){
+        return isset_and_not_empty(self::$statusMap,$this->attributes['status'],'');
     }
 }

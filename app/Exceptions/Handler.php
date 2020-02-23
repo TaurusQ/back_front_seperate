@@ -2,11 +2,16 @@
 
 namespace App\Exceptions;
 
+use App\Traits\ApiResponseTraits;
 use Exception;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponseTraits;
     /**
      * A list of the exception types that are not reported.
      * 不需要记录到日志的异常
@@ -50,6 +55,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($request->ajax()){
+            if(!$exception instanceof ValidationException &&
+                !$exception instanceof AuthenticationException 
+               // !$exception instanceof NotFoundHttpException
+            ){
+                return $this->failed($exception->getMessage(),$exception->getCode());
+            }
+        }
         return parent::render($request, $exception);
     }
 }

@@ -10,15 +10,11 @@ use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends AdminBaseController
 {
     use AuthenticatesUsers, ProxyTrait;
-
-    public $guard_name = "admin";
-    public $provider_name = "admins";
 
     public function test()
     {
@@ -100,21 +96,5 @@ class LoginController extends AdminBaseController
         ]);
     }
 
-    /**
-     * 自定义登录参数
-     * @return string
-     */
-    public function username()
-    {
-        return 'username';
-    }
-
-    /**
-     * 自定义登录看守器
-     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
-     */
-    protected function guard()
-    {
-        return Auth::guard($this->guard_name);
-    }
+    
 }

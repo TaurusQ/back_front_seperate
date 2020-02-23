@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits;
+use Illuminate\Support\Str;
 
 trait CurdTrait
 {
@@ -34,11 +35,11 @@ trait CurdTrait
     {
         $model = $this->model->findOrFail($id);
 
-        return $this->update($model, $input);
+        return $this->updateByModel($model, $input);
         //return $model::where('id', $id)->update($input);
     }
 
-    public function update($model, $input)
+    public function updateByModel($model, $input)
     {
         $model->fill($input);
 
@@ -53,6 +54,7 @@ trait CurdTrait
         return $model::all($columns);
     }
 
+    /*
     public function get()
     {
         $model = $this->model;
@@ -63,15 +65,16 @@ trait CurdTrait
 
         return $model::get($model::$index);
     }
+    */
 
-    public function count()
+    public function getCount()
     {
         $model = $this->model;
 
         return $model::where('id', '>=', 1)->count();
     }
 
-    public function paginate($limit, array $columns = ['*'])
+    public function getLatestPaginate($limit, array $columns = ['*'])
     {
         $model = $this->model;
 

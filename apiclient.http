@@ -153,7 +153,7 @@ X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
 
 {
-  "name":"test Role2",
+  "name":"test Role3",
   "guard_name":"admin",
   "description":"test",
   "remark":"test",
@@ -184,7 +184,7 @@ X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
 
 {
-  "ids":[6,7]
+  "ids":[6]
 }
 
 ### assign permissions to role
@@ -246,6 +246,24 @@ Authorization: Bearer {{adminToken}}
 {
   "ids":[5,6]
 }
+
+### modify admin password
+POST {{host}}/admin/admins/modify HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "oldpassword":"123123",
+  "password":"1231234",
+  "password_confirmation":"1231234"
+}
+
+### reset admin password
+POST {{host}}/admin/admins/reset/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
 
 ### assign roles to permission
 POST {{host}}/admin/roles/assign/1 HTTP/1.1

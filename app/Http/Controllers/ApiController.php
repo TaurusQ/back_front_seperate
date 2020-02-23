@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Traits\ApiResponseTraits;
+use App\Traits\CurdTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
-    use ApiResponseTraits;
+    use ApiResponseTraits, CurdTrait;
 
     protected $model;
     protected $resourceCollection = "App\Http\Resources\CommonCollection";
@@ -32,11 +33,19 @@ class ApiController extends Controller
         $data = $request->only($this->fillable);
 
         //  2. 验证数据
-        if (method_exists($this, 'message')) {
+        /*
+        if (method_exists($this, 'ruleMessage')) {
             $validator = Validator::make($data, $this->storeRule(), $this->ruleMessage());
         } else {
             $validator = Validator::make($data, $this->storeRule());
         }
+        */
+
+        $validator = Validator::make(
+            $data,
+            $this->storeRule(),
+            method_exists($this, 'ruleMessage') ? $this->ruleMessage() : []
+        );
 
         if ($validator->fails()) {
             // 返回异常错误
@@ -46,7 +55,8 @@ class ApiController extends Controller
         // 3.数据无误，进一步处理后保存到数据表里面，有的表需要处理，有的不需要
         $data = $this->storeHandle($data);
 
-        if ($this->model::create($data)) {
+        // if ($this->model::create($data)) {
+        if ($this->add($data)) {
             return $this->messageWithCode('新增数据成功', 201);
         } else {
             return $this->failed('新增数据失败');
@@ -72,7 +82,8 @@ class ApiController extends Controller
         $data = $this->updateHandle($data);
 
         // 更新到数据表
-        if ($this->model::where('id', $id)->update($data)) {
+        //if ($this->model::where('id', $id)->update($data)) {
+        if ($this->updateById($id, $data)) {
             return $this->message('数据更新成功');
         } else {
             return $this->failed('数据更新失败');
@@ -100,7 +111,8 @@ class ApiController extends Controller
                 $this->model::where('id', $id)->delete();
             }
             */
-            $this->model->destroy($id);
+            //$this->model->destroy($id);
+            $this->delete($id);
         });
         return true;
     }

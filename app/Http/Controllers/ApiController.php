@@ -165,6 +165,7 @@ class ApiController extends Controller
         return $data;
     }
 
+    // https://learnku.com/docs/laravel/6.x/validation/5144
     protected function storeRule()
     {
         return [];

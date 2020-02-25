@@ -98,4 +98,27 @@ class MenuService{
 
         return $arr;
     }
+
+    // 将 status map结构的数据转换成可以插入数据库中的格式
+    // app(App\Services\MenuService::class)->getFormatterStatusMapList($data)
+    public function getFormatterStatusMapList($data){
+
+        $return = [];
+        foreach($data as $key => $value){
+            $temp['table_name'] = $key;
+            
+            foreach($value as $ke => $va){
+                $temp['column'] = $ke;
+
+                foreach($va as $k => $v ){
+                    $temp['status_code'] = $k;
+                    $temp['status_description'] = $v;
+
+                    $return[] = $temp;
+                }
+            }
+        }
+
+        return $return;
+    }
 }

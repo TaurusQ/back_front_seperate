@@ -19,6 +19,16 @@ class AppNotice extends Model
         return $this->belongsTo('App\Models\Admin');
     }
 
+    /*
+    type 由system config维护
+    const TYPE_SYSTEM = 1;
+
+    public static $typeMap = [
+        self::TYPE_SYSTEM => '系统消息',
+        
+    ];
+    
+
     const ACCESS_TYPE_ALL_ADMIN = "adm";
     const ACCESS_TYPE_ALL_USER = "usr";
     const ACCESS_TYPE_PRIVATE_USER = "pri";
@@ -28,21 +38,10 @@ class AppNotice extends Model
         self::ACCESS_TYPE_ALL_USER => '所有用户',
         self::ACCESS_TYPE_PRIVATE_USER => '特定用户'
     ];
-
-    /*
-    type 由system config维护
-    const TYPE_SYSTEM = 1;
-
-    public static $typeMap = [
-        self::TYPE_SYSTEM => '系统消息',
-        
-    ];
-    */
-
-
     protected $appends = ['access_type_text'];
 
     public function getAccessTypeTextAttribute(){
         return isset_and_not_empty(self::$accessTypeMap,$this->attributes['access_type'],'');
     }
+    */
 }

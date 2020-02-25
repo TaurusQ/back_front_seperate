@@ -14,6 +14,14 @@ class Admin extends Authenticatable
 
     protected $guarded = [];
 
+    
+    public function findForPassport($login)
+    {
+        //return User::orWhere('email', $login)->orWhere('username', $login)->first();
+        return $this->where('username', $login)->first();
+    }
+
+    /*
     const STATUS_NORMAL = 1;
     const STATUS_FORBIDEN = -1;
 
@@ -23,14 +31,9 @@ class Admin extends Authenticatable
     ];
 
     protected $appends = ['status_text'];
-
-    public function findForPassport($login)
-    {
-        //return User::orWhere('email', $login)->orWhere('username', $login)->first();
-        return $this->where('username', $login)->first();
-    }
-
+    
     public function getStatusTextAttribute(){
         return isset_and_not_empty(self::$statusMap,$this->attributes['status'],'');
     }
+    */
 }

@@ -17,6 +17,7 @@ class Article extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    /*
     const ACCESS_TYPE_PUBLIC = "pub";
     const ACCESS_TYPE_PRIVATE = "pri";
     const ACCESS_TYPE_PASSWORD = "pwd";
@@ -44,4 +45,5 @@ class Article extends Model
     public function getStatusTextAttribute(){
         return isset_and_not_empty(self::$statusMap,$this->attribute['status'],'');
     }
+    */
 }

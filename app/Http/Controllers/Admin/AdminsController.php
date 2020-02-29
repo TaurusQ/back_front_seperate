@@ -13,17 +13,19 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminsController extends AdminBaseController
 {
-    public $fillable = ["username", "password"];
+    protected $createFillable = ["username", "password","status","description","remark"];
+    protected $updateFillable = ["status","description","remark"];
 
     public function __construct(Admin $admin)
     {
         //parent::__construct();
         $this->model = $admin;
+        parent::__construct();
     }
 
     public function list(Request $request)
     {
-        $per_page = $request->get('per_page', 10);
+        $per_page = $request->get('limit', 10);
         return $this->getListData($per_page);
     }
 

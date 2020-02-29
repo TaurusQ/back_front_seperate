@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Traits\ApiResponseTraits;
 use App\Traits\CurdTrait;
+use App\Traits\TableStatusTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -11,19 +12,24 @@ use Illuminate\Support\Facades\Auth;
 
 class ApiController extends Controller
 {
-    use ApiResponseTraits, CurdTrait;
+    use ApiResponseTraits, CurdTrait, TableStatusTrait;
 
+    protected $fillable = [];
+    protected $createFillable = [];
+    protected $updateFillable = [];
     protected $model;
     protected $resourceCollection = "App\Http\Resources\CommonCollection";
 
-    protected function list(Request $request){
-        $per_page = $request->get('per_page', 10);
+    protected function list(Request $request)
+    {
+        $per_page = $request->get('limit', 10);
         return $this->getListData($per_page);
     }
 
+    // limit 参数表示每页多少条数据
     protected function getListData($pageSize)
     {
-        $data = $this->model->paginate($pageSize);
+        $data = $this->model->where($this->convertWhere(request()->all()))->paginate($pageSize);
         return new $this->resourceCollection($data);
     }
 
@@ -37,7 +43,7 @@ class ApiController extends Controller
     protected function store(Request $request)
     {
         // 1. 获取前端数据
-        $data = $request->only($this->fillable);
+        $data = $request->only($this->createFillable ?? $this->fillable);
 
         //  2. 验证数据
         /*
@@ -63,8 +69,9 @@ class ApiController extends Controller
         $data = $this->storeHandle($data);
 
         // if ($this->model::create($data)) {
-        if ($this->add($data)) {
-            return $this->messageWithCode('新增数据成功', 201);
+        if ($res = $this->add($data)) {
+            //return $this->messageWithCode('新增数据成功', 201);
+            return $this->successWithCode($res,'新增数据成功',201);
         } else {
             return $this->failed('新增数据失败');
         }
@@ -73,7 +80,7 @@ class ApiController extends Controller
     protected function update(Request $request, $id)
     {
         // 1. 获取前端数据
-        $data = $request->only($this->fillable);
+        $data = $request->only($this->updateFillable ?? $this->fillable);
 
         if (method_exists($this, 'message')) {
             $validator = Validator::make($data, $this->updateRule($id), $this->ruleMessage());
@@ -90,8 +97,9 @@ class ApiController extends Controller
 
         // 更新到数据表
         //if ($this->model::where('id', $id)->update($data)) {
-        if ($this->updateById($id, $data)) {
+        if ($res = $this->updateById($id, $data)) {
             return $this->message('数据更新成功');
+            // return $this->success($res,'数据更新成功');
         } else {
             return $this->failed('数据更新失败');
         }

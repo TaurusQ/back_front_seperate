@@ -43,9 +43,13 @@ trait ApiResponseTraits
 		return $this->failed($message, FoundationResponse::HTTP_INTERNAL_SERVER_ERROR);
 	}
 
-	public function success($data, $status = "success", $message = '')
+	public function success($data, $message = '',$status = "success")
 	{
 		return $this->status($status, compact('data'), null, $message);
+	}
+
+	public function successWithCode($data,$message,$code,$status = "success"){
+		return $this->status($status, compact('data'), $code, $message);
 	}
 
 	public function failed($message, $code = FoundationResponse::HTTP_BAD_REQUEST, $status = 'error', $data = '')

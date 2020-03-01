@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminsController extends AdminBaseController
 {
-    protected $createFillable = ["username", "password","status","description","remark"];
-    protected $updateFillable = ["status","description","remark"];
+    protected $createFillable = ["username","nickname", "password","status","description","remark"];
+    protected $updateFillable = ["nickname","status","description","remark"];
 
     public function __construct(Admin $admin)
     {
@@ -73,7 +73,7 @@ class AdminsController extends AdminBaseController
      * $admin = \App\Models\Admin::find(3);
      * Hash::check('admin', $admin->password)
      */
-    public function modify(Request $request)
+    public function modify_password(Request $request)
     {
         // 旧密码，新密码，确认新密码
         $data = $request->only(['oldpassword', 'password', 'password_confirmation']);

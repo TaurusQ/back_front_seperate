@@ -20,19 +20,19 @@ X-Requested-With: XMLHttpRequest
 
 {
   "username":"admin",
-  "password":"admin"
+  "password":"123456"
 }
 
-@adminToken = {{login.response.body.$.token.access_token}}
-@refreshToken = {{login.response.body.$.token.refresh_token}}
+@adminToken = {{login.response.body.$.data.token.access_token}}
+@refreshToken = {{login.response.body.$.data.token.refresh_token}}
 
+@realToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiMmRjMDRhYmVkYTAwODk0NWFkZGM1ZGViMTNhMDgzNjhlNGQ3NGU5MjAzYjAxYmEyM2Q2NWI3ZTE0MTY3OWVlODVkYzk0MTk1ZWIyMjE1NTIiLCJpYXQiOjE1ODI4NTM3NzEsIm5iZiI6MTU4Mjg1Mzc3MSwiZXhwIjoxNTgyOTQwMTcwLCJzdWIiOiIxIiwic2NvcGVzIjpbIioiXX0.det6DeEY47vmFZsV9j2-ZYbbVU55-__w3V3rFKCupKMMbpcVMzCvndzVdpAcisUQG_JvVspS3Xe-iyKw4NOrVxUdxL5l3XJNpkbFEkb5xIfakUna_fxrY9ofBQzb79SuSJBTDdZUYvIG4_zNckFvMoSDqG6zW4zLbdILOMracVtxK-lL1oJSl0wKOYc-P1jvIrS1A_42dPMAUB6Cxzo99Yi3VI8doUtfmImJa6dJKGuHnVnb_3Ed6YG8xM7U4569xYeia_cq35DaoPfwl_MzztGJQBcvT8fy2iSy76Gz4sD_0nzmRN4pFhZzgybz44wgmIzBSDch1CpMYtONaBr-nM-lGydlbfLNempmbctfJpQ0Gxck9oeA-HvWusPQZ1pRHvdgsvUEG8OAfcu--OSV6j8PbxarMCB-shyAlUqQTPqpk846VS0bbIFnz6AEEU0rr7JdGbTVc__F0Ck9_ALRDPAUyf6tMLLyGnv6iPJD5E38TTFqAiXhMkcJIASgyMck30tWOho6K3C07RTPcjqSiKjos1WG9q67kkvx9DxB4IFMkqSdxtKfCtthsnovMhafhlKNDn3ZXX0zsOpSwfiaUSl2gv5idfqCsYWglK6vhsfObcTgZFnP0VdyNd2e8rIucBWTCjcpa83LYZkf3WbXYOQ8_jAL5XrIKGYIzSeocxU"
 
 ### admin info
-POST {{host}}/admin/me HTTP/1.1
+GET {{host}}/admin/me HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
-
 
 
 ### admin logout
@@ -197,11 +197,23 @@ Authorization: Bearer {{adminToken}}
   "ids":[1,2,3]
 }
 
+### app notice type
+GET {{host}}/admin/admins/field_map HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+
 ### admins list
 GET {{host}}/admin/admins HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
+
+{
+  "username":"ad",
+  "created_at":["2020-01-29T07:50:14.842Z","2020-02-28T07:50:14.842Z"]
+}
 
 ### admin
 GET {{host}}/admin/admins/1 HTTP/1.1
@@ -216,23 +228,23 @@ X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
 
 {
-  "username":"test admin32",
+  "username":"test1admin32",
   "password":"123456"
 }
 
 
 ### update admin
-PATCH {{host}}/admin/admins/4 HTTP/1.1
+PATCH {{host}}/admin/admins/12 HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
 
 {
-  "username": "admin"
+  "username": "test1admin321"
 }
 
 ### delete admin
-DELETE {{host}}/admin/admins/4 HTTP/1.1
+DELETE {{host}}/admin/admins/13 HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
@@ -248,7 +260,7 @@ Authorization: Bearer {{adminToken}}
 }
 
 ### modify admin password
-POST {{host}}/admin/admins/modify HTTP/1.1
+POST {{host}}/admin/admins/modify/password HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
@@ -287,3 +299,296 @@ GET {{host}}/admin/adminlogs/11 HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Bearer {{adminToken}}
+
+
+### app notice type
+GET {{host}}/admin/app_notices/status HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### create app notice
+POST {{host}}/admin/app_notices HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "title":"测试通知标题2",
+  "content":"测试通知内容",
+  "type":1,
+  "is_alert":true,
+  "access_type":"usr"
+}
+
+
+### app notices list
+GET {{host}}/admin/app_notices HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### app notice
+GET {{host}}/admin/app_notices/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### update app notice
+PATCH {{host}}/admin/app_notices/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "title":"测试通知标题2",
+  "content":"测试通知内容222",
+  "type":1,
+  "is_alert":true,
+  "access_type":"usr"
+}
+
+### delete app notice
+DELETE {{host}}/admin/app_notices/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete app notice
+DELETE {{host}}/admin/app_notices/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[1]
+}
+
+### article categories list
+GET {{host}}/admin/article_categories HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### create article categories
+POST {{host}}/admin/article_categories HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "name":"文章类型",
+  # "pid":"",
+  "is_open":true
+}
+
+### update article categories
+PATCH {{host}}/admin/article_categories/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "name":"文章类型1",
+  # "pid":"",
+  "is_open":true
+}
+
+### delete article categories
+DELETE  {{host}}/admin/article_categories/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete article categories
+DELETE  {{host}}/admin/article_categories/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[2]
+}
+
+
+
+
+
+### article list
+GET {{host}}/admin/articles HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### article show
+GET {{host}}/admin/articles/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### create article
+POST {{host}}/admin/articles HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  # "title":"文章类型",
+  # "article_category_id":3,
+  # "content":"测试内容",
+  "status":1,
+  "is_recommend":false,
+  "is_top":false,
+  "weight":20,
+  "access_type":"pub"
+}
+
+### update article
+PATCH {{host}}/admin/articles/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "status":1,
+  "is_recommend":true,
+  "is_top":false,
+  "weight":20,
+  "access_type":"pub"
+}
+
+### delete article
+DELETE {{host}}/admin/articles/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete article
+DELETE {{host}}/admin/articles/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[1]
+}
+
+
+### system config list
+GET {{host}}/admin/system_configs HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### system config
+GET {{host}}/admin/system_configs/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### system config group
+GET {{host}}/admin/system_configs/group HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### create system config
+POST {{host}}/admin/system_configs HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "flag":"test_flag",
+  "title":"标题",
+  "config_group":"配置组",
+  "value":false,
+  "description":"描述",
+  "is_open":false
+}
+
+### update system config
+PATCH {{host}}/admin/system_configs/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "flag":"test_flag",
+  "title":"标题2",
+  "config_group":"配置组",
+  "value":false,
+  "description":"描述",
+  "is_open":false
+}
+
+### delete system config
+DELETE {{host}}/admin/system_configs/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete system config
+DELETE {{host}}/admin/system_configs/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[1]
+}
+
+
+### status maps list
+GET {{host}}/admin/status_maps HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### status map
+GET {{host}}/admin/status_maps/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### create status map
+POST {{host}}/admin/status_maps HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "table_name":"app_notices",
+  "column":"type",
+  "status_code":-1,
+  "status_description":"所有管理员"
+}
+
+### update status map
+PATCH {{host}}/admin/status_maps/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "table_name":"app_notices",
+  "column":"type",
+  "status_code":1,
+  "status_description":"所有人1"
+}
+
+### delete status map
+DELETE  {{host}}/admin/status_maps/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete status map
+DELETE  {{host}}/admin/status_maps/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[1]
+}

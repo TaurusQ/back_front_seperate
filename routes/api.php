@@ -115,6 +115,15 @@ Route::namespace("Admin")->name("api.")->prefix("admin")->group(function () {
         Route::delete('/status_maps/batch', 'StatusMapsController@deleteAll')->name('status_maps.batch_delete');
         Route::delete('/status_maps/{status_map}', 'StatusMapsController@destroy')->name('status_maps.destroy');
         
+
+        // attachment
+        Route::get('/attachments', 'AttachmentsController@list')->name('attachments.list');
+        Route::get('/attachments/{attachment}', 'AttachmentsController@show')->name('attachments.show');
+        //Route::post('/attachments', 'AttachmentsController@store')->name('attachments.store');
+        Route::patch('/attachments/{attachment}', 'AttachmentsController@update')->name('attachments.update');
+        //Route::delete('/attachments/batch', 'AttachmentsController@deleteAll')->name('attachments.batch_delete');
+        //Route::delete('/attachments/{attachment}', 'AttachmentsController@destroy')->name('attachments.destroy');
+        
     });
 });
 

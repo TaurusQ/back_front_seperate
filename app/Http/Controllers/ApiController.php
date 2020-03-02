@@ -36,8 +36,11 @@ class ApiController extends Controller
 
     protected function show($id)
     {
-        //$data = $this->model::findOrFail($id);
+        // $data = $this->model::findOrFail($id);
         $data = $this->find($id);
+
+        if(!$data) throw new InvalidRequestException("数据不存在");
+
         return $this->success($data);
     }
 

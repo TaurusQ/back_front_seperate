@@ -608,3 +608,25 @@ Authorization: Bearer {{adminToken}}
 {
   "ids":[1]
 }
+
+### attachments list
+GET {{host}}/admin/attachments HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### attachment
+GET {{host}}/admin/attachments/100 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### update attachment
+PATCH {{host}}/admin/attachments/1 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "remark":"test"
+}

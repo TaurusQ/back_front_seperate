@@ -2,6 +2,7 @@
 
 namespace App\Handlers;
 
+use App\Exceptions\InternalException;
 use App\Exceptions\InvalidRequestException;
 use App\Models\Attachment;
 use App\Traits\ApiResponseTraits;
@@ -26,10 +27,18 @@ class FileUploadHandler{
 
     protected $model;
 
+    protected $disk = "public";
+    protected $disk_config = [];
+
     public function __construct(Attachment $attachment)
     {
         $this->attachment = $attachment;
         $this->model = request()->user();
+        $this->disk_config = config("filesystems.disks.".$this->disk);
+    }
+
+    public function getStorage(){
+        return Storage::disk($this->disk);
     }
 
     /**
@@ -69,7 +78,8 @@ class FileUploadHandler{
             // putFileAs方法会返回文件路径，以便你可以将文件路径（包括生成的文件名）存储在数据库中
             // 注意，这里如果不加上 disk("public")，文件的存储路径是"storage\app\uploads\avatar\202003\02\avatar_1583123977_OAOw5iGp0p.png"
             // 加上以后，存储路径是"storage\app\public\uploads\avatar\202003\02\avatar_1583123977_OAOw5iGp0p.png"
-            $relative_file_path = Storage::disk("public")->putFileAs($relative_folder_path,$file,$filename);
+            //$relative_file_path = Storage::disk("public")->putFileAs($relative_folder_path,$file,$filename);
+            $relative_file_path = $this->getStorage()->putFileAs($relative_folder_path,$file,$filename);
 
             // 将attachment的数据保存
             $insert_data = $this->getAttachmentInsertData($file,"pic",$category,$relative_file_path);
@@ -101,17 +111,17 @@ class FileUploadHandler{
      * app(App\Handlers\FileUploadHandler::class)->getRelativeFolderPath("temp")
      */
     public function getRelativeFolderPath($category){
-        return $this->base_upload_folder."/$category/".date('Ym/d',time());
+        return $this->base_upload_folder.DIRECTORY_SEPARATOR.$category.DIRECTORY_SEPARATOR.".date('Ym/d',time())";
     }
-
-    /**
+    
+    /** 
      * 根据文件归类和文件类型生成文件名
      *
-     * @param [type] $category
-     * @param [type] $extension
+     * @param string $category
+     * @param string $extension 扩展名
      * @return 生成类似文件名："temp_1583065005_RjOgwp38Og.png"
-     * @Description 
-     * @example  app(App\Handlers\FileUploadHandler::class)->generateFileName("temp","png")
+     * @Description void
+     * @exam app(App\Handlers\FileUploadHandler::class)->generateFileName("temp","png");
      * @author TaurusQ
      * @since
      * @date 2020-03-01
@@ -135,7 +145,7 @@ class FileUploadHandler{
      * @date 2020-03-01
      */
     public function getAttachmentInsertData($file,$file_type,$category,$relative_file_path){
-        $public_disk = config("filesystems.disks.public");
+        // $public_disk = config("filesystems.disks.public");
         
         return [
             "model_type" => \get_class($this->model),
@@ -154,7 +164,8 @@ class FileUploadHandler{
             'storage_name' => basename($relative_file_path),
             
             // 这里的storage_path 是文件的绝对地址
-            "storage_path" => $public_disk['root'].'/'.$relative_file_path,
+            //"storage_path" => $public_disk['root'].DIRECTORY_SEPARATOR.$relative_file_path,
+            "storage_path" => $this->disk_config['root'].DIRECTORY_SEPARATOR.$relative_file_path,
             //"url" => config('app.url'). Storage::url($relative_file_path)
         ];
     }
@@ -187,8 +198,42 @@ class FileUploadHandler{
         $image->save();
     }
 
+    /***
+     * 统一Handler的数据返回格式
+     */
     public function formatReturn(){
         return ['status' => $this->status, 'data' => $this->data, 'message' => $this->message];
     }
 
+    // 根据 storage_path 删除文件
+    public function deleteByStoragePath($storage_path){
+        return $this->deleteFile($this->getRelativeFilePath($storage_path));
+    }
+
+    /**
+     * 删除storage中的文件
+     *
+     * @param 文件相对路径 $file 相对于目录”storage\app\public“的路径
+     * @return void
+     * @Description
+     * @example
+     * @author TaurusQ
+     * @since
+     * @date 2020-03-02
+     */
+    public function deleteFile($file){
+        try{
+            if($this->getStorage()->exists($file)){
+                $result = $this->getStorage()->delete($file);
+            }
+        }catch(Exception $e){
+            throw new InternalException($file."文件删除失败");
+        }
+    }
+
+    // 根据文件的绝对路径获取文件的相对路径，即Attachments表中的storage_path字段
+    // app(App\Handlers\FileUploadHandler::class)->getRelativeFilePath("temp")
+    public function getRelativeFilePath($absolutPath){      
+        return Str::replaceFirst($this->disk_config['root'],"",$absolutPath);
+    }
 }

@@ -630,3 +630,19 @@ Authorization: Bearer {{adminToken}}
 {
   "remark":"test"
 }
+
+### delete attachment
+DELETE {{host}}/admin/attachments/6 HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+### batch delete attachment
+DELETE {{host}}/admin/attachments/batch HTTP/1.1
+content-type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+
+{
+  "ids":[4,5]
+}

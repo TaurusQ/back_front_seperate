@@ -121,8 +121,8 @@ Route::namespace("Admin")->name("api.")->prefix("admin")->group(function () {
         Route::get('/attachments/{attachment}', 'AttachmentsController@show')->name('attachments.show');
         //Route::post('/attachments', 'AttachmentsController@store')->name('attachments.store');
         Route::patch('/attachments/{attachment}', 'AttachmentsController@update')->name('attachments.update');
-        //Route::delete('/attachments/batch', 'AttachmentsController@deleteAll')->name('attachments.batch_delete');
-        //Route::delete('/attachments/{attachment}', 'AttachmentsController@destroy')->name('attachments.destroy');
+        Route::delete('/attachments/batch', 'AttachmentsController@deleteAll')->name('attachments.batch_delete');
+        Route::delete('/attachments/{attachment}', 'AttachmentsController@destroy')->name('attachments.destroy');
         
     });
 });

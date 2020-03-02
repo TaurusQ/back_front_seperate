@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Admin;
+use App\Models\Attachment;
 use App\Observers\AdminObserver;
+use App\Observers\AttachmentObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Admin::observe(AdminObserver::class);
+        Attachment::observe(AttachmentObserver::class);
     }
 }

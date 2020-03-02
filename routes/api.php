@@ -19,12 +19,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 
+Route::any('/upload/{file_type}/{category}','UploadController@commonUpload');
+Route::any('/upload_test','UploadController@testUpload');
+
 Route::namespace("Admin")->name("api.")->prefix("admin")->group(function () {
 
     Route::any('/test', "LoginController@test");
 
     Route::post('/login', 'LoginController@login');
-    Route::post('/refresh', 'LoginController@refresh');
+    Route::post('/refresh', 'LoginController@refresh'); 
 
     // 中间件验证 ,multiauth: guard_name
     Route::middleware('multiauth:admin')->name("admin.")->group(function () {

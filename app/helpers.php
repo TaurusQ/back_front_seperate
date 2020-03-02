@@ -92,3 +92,14 @@ function format_bytes($size, $delimiter = '')
     for ($i = 0; $size >= 1024 && $i < 5; $i++) $size /= 1024;
     return round($size, 2) . $delimiter . $units[$i];
 }
+
+/**
+ * 记录日志
+ * @param $str
+ */
+function writelog($str){
+    $file = fopen(public_path()."/log.txt","a");
+    fwrite($file,date('Y-m-d H:i:s')."   ".$str."\r\n");
+    fclose($file);
+    //print_r($str.'<br/><br/>');
+}

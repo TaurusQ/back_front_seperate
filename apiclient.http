@@ -10,6 +10,22 @@ GET {{host}}/admin/captcha HTTP/1.1
 content-type: application/json
 X-Requested-With: XMLHttpRequest
 
+### upload
+POST {{host}}/upload/pic/avatar HTTP/1.1
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryT1JMYfdnAAGHKBp0
+
+------WebKitFormBoundaryT1JMYfdnAAGHKBp0
+Content-Disposition: form-data; name="file"; filename="flat.png"
+Content-Type: image/png
+< ./flat.png
+------WebKitFormBoundaryT1JMYfdnAAGHKBp0--
+
+### test upload
+POST {{host}}/upload_test HTTP/1.1
+X-Requested-With: XMLHttpRequest
+Authorization: Bearer {{adminToken}}
 
 
 ### admin login

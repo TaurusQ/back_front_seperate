@@ -20,6 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 */
 
 Route::any('/upload/{file_type}/{category}','UploadController@commonUpload');
+
+// 测试图片上传
 Route::any('/upload_test','UploadController@testUpload');
 
 Route::namespace("Admin")->name("api.")->prefix("admin")->group(function () {

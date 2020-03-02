@@ -25,6 +25,7 @@ class UploadController extends ApiController
         //print_r($request->all());exit;
 
         // 验证rule
+        /*
         $validator = Validator::make($request->all(),[
             'file' => 'required|file'
         ]);
@@ -33,6 +34,9 @@ class UploadController extends ApiController
             // 返回异常错误
             return $this->dealFailValidator($validator);
         }
+        */
+
+        $this->validateRequest($request,['file' => 'required|file']);
 
         $file = $request->file('file');
         $data = $request->only("file","file_type");
@@ -66,6 +70,7 @@ class UploadController extends ApiController
         }
     }
 
+    // 测试图片上传功能
     public function testUpload(Request $request){
         
         $Authorization = $request->header("Authorization");
@@ -78,14 +83,16 @@ class UploadController extends ApiController
             $response = $client->request("POST","http://seperate.test/api/upload/pic/avatar",[
                 "headers" => [
                     'authorization' => $Authorization,
-                    //'X-Requested-With'=> 'XMLHttpRequest'
+                    'X-Requested-With'=> 'XMLHttpRequest'
                 ],
+                
                 "multipart" => [
                     [
                         "name" => "file",
                         "contents" => fopen(base_path()."/flat.png","r")
                     ]
                 ]
+                
             ]);
         }catch(Exception $e){
             //return $this->failed($e->getMessage());

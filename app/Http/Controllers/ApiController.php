@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\InvalidRequestException;
 use App\Traits\ApiResponseTraits;
 use App\Traits\CurdTrait;
 use App\Traits\TableStatusTrait;
@@ -53,7 +54,14 @@ class ApiController extends Controller
             $validator = Validator::make($data, $this->storeRule());
         }
         */
+        
+        $this->validateRequest(
+            $request,
+            $this->storeRule(),
+            method_exists($this, 'ruleMessage') ? $this->ruleMessage() : []
+        );
 
+        /*
         $validator = Validator::make(
             $data,
             $this->storeRule(),
@@ -64,6 +72,7 @@ class ApiController extends Controller
             // 返回异常错误
             return $this->dealFailValidator($validator);
         }
+        */
 
         // 3.数据无误，进一步处理后保存到数据表里面，有的表需要处理，有的不需要
         $data = $this->storeHandle($data);
@@ -82,6 +91,14 @@ class ApiController extends Controller
         // 1. 获取前端数据
         $data = $request->only($this->updateFillable ?? $this->fillable);
 
+        //  2. 验证数据
+        $this->validateRequest(
+            $request,
+            $this->updateRule($id),
+            method_exists($this, 'ruleMessage') ? $this->ruleMessage() : []
+        );
+
+        /*
         if (method_exists($this, 'message')) {
             $validator = Validator::make($data, $this->updateRule($id), $this->ruleMessage());
         } else {
@@ -92,6 +109,7 @@ class ApiController extends Controller
             // 返回异常错误
             return $this->dealFailValidator($validator);
         }
+        */
         // 进一步处理数据
         $data = $this->updateHandle($data);
 
@@ -160,7 +178,25 @@ class ApiController extends Controller
             $errorTips = $errorTips . $message . ',';
         }
         $errorTips = substr($errorTips, 0, strlen($errorTips) - 1);
-        return $this->failed($errorTips, 422);
+        //return $this->failed($errorTips, 422);
+        throw new InvalidRequestException($errorTips,422);
+    }
+
+    /**
+     * 进行表单验证
+     *
+     * @param Request $request
+     * @param [type] $validateRules 验证规则
+     * @param [type] $ruleMessages 验证返回信息
+     * @author TaurusQ
+     * @since
+     * @date 2020-03-02
+     */
+    protected function validateRequest(Request $request,$validateRules,$ruleMessages = []){
+        $validator = Validator::make($request->all(),$validateRules,$ruleMessages);
+        if($validator->fails()){
+            $this->dealFailValidator($validator);
+        }
     }
 
     protected function storeHandle($data)
